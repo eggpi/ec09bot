@@ -77,7 +77,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         return random.choice(self.batima_cache)
 
     def _rebuild_batima_cache(self):
-        status = self.twitter.GetUserTimeline("falasdobatima")
+        status = self.twitter.GetUserTimeline("falasdobatima", count = 50)
         tweets = [s.GetText() for s in status]
 
         # Try not very hard to exclude replies

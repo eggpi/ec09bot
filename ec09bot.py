@@ -63,8 +63,17 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         except urllib2.URLError:
             return "Indisponível :("
 
-        d = json.loads(st.strip("bandeco()"), encoding = "latin-1")
-        return "%(prato)s, com suco de %(suco)s e sobremesa %(sobremesa)s" % d
+        st = st[len("bandeco("):-2]
+
+        d = json.loads(st)
+        d.update((k, v.lower()) for k, v in d.items())
+
+        bandeco_str = \
+            "%(prato)s, com suco de %(suco)s, " \
+            "salada %(salada)s e sobremesa %(sobremesa)s." % d
+
+        bandeco_str = bandeco_str[0].upper() + bandeco_str[1:]
+        return bandeco_str.encode("utf-8")
 
     def command_batima(self):
         age = (datetime.datetime.now() - self.batima_cache_time).seconds
@@ -72,7 +81,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             self._rebuild_batima_cache()
 
         if not self.batima_cache:
-        	return "FODEU! SERÁ QUE O TWITTER CAIU?"
+            return "FODEU! SERÁ QUE O TWITTER CAIU?"
 
         return random.choice(self.batima_cache)
 

@@ -85,6 +85,11 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         return random.choice(self.batima_cache)
 
+    def command_leave(self):
+        self.connection.quit("How do I deal with mortality? "
+                            "Thanks to denial, I'm immortal!")
+        sys.exit(0)
+
     def _rebuild_batima_cache(self):
         status = self.twitter.GetUserTimeline("falasdobatima", count = 50)
         tweets = [s.GetText() for s in status]

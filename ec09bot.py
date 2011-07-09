@@ -91,11 +91,20 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         sys.exit(0)
 
     def _rebuild_batima_cache(self):
+        from itertools import dropwhile
+
         status = self.twitter.GetUserTimeline("falasdobatima", count = 50)
         tweets = [s.GetText() for s in status]
 
-        # Try not very hard to exclude replies
-        self.batima_cache = [t.encode("utf-8") for t in tweets if t[0] != "@"]
+        self.batima_cache = []
+
+        for t in tweets:
+            # Strip @usernames from replies, hope they are all in the beginning
+            words = t.split()
+            batima_line = " ".join(dropwhile(lambda w: w[0] == "@", words))
+
+            self.batima_cache.append(batima_line.encode("utf-8"))
+
         self.batima_cache_time = datetime.datetime.now()
 
 if __name__ == "__main__":

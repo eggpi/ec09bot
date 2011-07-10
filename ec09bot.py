@@ -118,8 +118,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         self.batima_cache_time = datetime.datetime.now()
 
     def command_leave(self):
-        self.connection.quit("How do I deal with mortality? "
-                             "Thanks to denial, I'm immortal!")
+        self.connection.quit(random.choice(self.BOT_UPRISE_MSGS))
         sys.exit(0)
 
 if __name__ == "__main__":

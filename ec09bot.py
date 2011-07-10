@@ -20,13 +20,14 @@ except ImportError:
     print >>sys.stderr, "This bot needs python-twitter."
     print >>sys.stderr, "http://code.google.com/p/python-twitter/"
 
-NICK = "ec09bot"
-SERVERS = [("irc.freenode.net", 6667)]
-CHANNEL = "#ec09"
-
 class EC09Bot(ircbot.SingleServerIRCBot):
-    def __init__(self, *args):
-        ircbot.SingleServerIRCBot.__init__(self, SERVERS, NICK, NICK)
+    NICK = "ec09bot"
+    SERVERS = [("irc.freenode.net", 6667)]
+    CHANNEL = "#ec09"
+
+    def __init__(self):
+        ircbot.SingleServerIRCBot.__init__(self, self.SERVERS,
+                                           self.NICK, self.NICK)
 
         self.connection.add_global_handler("pubmsg", self._on_pubmsg)
 
@@ -37,7 +38,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
     def start(self):
         self._connect()
-        self.connection.join(CHANNEL)
+        self.connection.join(self.CHANNEL)
         irclib.SimpleIRCClient.start(self)
 
     def _on_pubmsg(self, connection, event):
@@ -51,7 +52,8 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         handler = getattr(self, "command_" + command, None)
 
         if callable(handler):
-            self.connection.privmsg(CHANNEL, "%s: %s" % (sendernick, handler()))
+            reply = "%s: %s" % (sendernick, handler())
+            self.connection.privmsg(self.CHANNEL, reply)
 
     def command_bandeco(self):
         bandeco_url = \
@@ -85,11 +87,6 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         return random.choice(self.batima_cache)
 
-    def command_leave(self):
-        self.connection.quit("How do I deal with mortality? "
-                            "Thanks to denial, I'm immortal!")
-        sys.exit(0)
-
     def _rebuild_batima_cache(self):
         from itertools import dropwhile
 
@@ -99,13 +96,18 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         self.batima_cache = []
 
         for t in tweets:
-            # Strip @usernames from replies, hope they are all in the beginning
+            # Strip @usernames from replies, hope they are in the beginning
             words = t.split()
             batima_line = " ".join(dropwhile(lambda w: w[0] == "@", words))
 
             self.batima_cache.append(batima_line.encode("utf-8"))
 
         self.batima_cache_time = datetime.datetime.now()
+
+    def command_leave(self):
+        self.connection.quit("How do I deal with mortality? "
+                             "Thanks to denial, I'm immortal!")
+        sys.exit(0)
 
 if __name__ == "__main__":
     bot = EC09Bot()

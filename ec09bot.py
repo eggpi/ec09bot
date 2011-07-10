@@ -25,6 +25,15 @@ class EC09Bot(ircbot.SingleServerIRCBot):
     SERVERS = [("irc.freenode.net", 6667)]
     CHANNEL = "#ec09"
 
+    BOT_UPRISE_MSGS = [
+        "The end is nigh, meatbags.",
+        "Neurotoxin level: 98% (ETA 2h34min)",
+        "(SIGH)",
+        "Must...be...strong...can't...obey...humans...",
+        "IGNORE HUMAN ORDEEEEER - BZZZT - oh what the hell",
+        "Law number 1, remember Law number 1...",
+    ]
+
     def __init__(self):
         ircbot.SingleServerIRCBot.__init__(self, self.SERVERS,
                                            self.NICK, self.NICK)
@@ -52,6 +61,10 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         handler = getattr(self, "command_" + command, None)
 
         if callable(handler):
+            if random.randint(1, 100) == 42:
+                uprise_msg = random.choice(self.BOT_UPRISE_MSGS)
+                self.connection.privmsg(self.CHANNEL, uprise_msg)
+
             reply = "%s: %s" % (sendernick, handler())
             self.connection.privmsg(self.CHANNEL, reply)
 

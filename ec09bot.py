@@ -20,6 +20,49 @@ except ImportError:
     print >>sys.stderr, "This bot needs python-twitter."
     print >>sys.stderr, "http://code.google.com/p/python-twitter/"
 
+class TwitterCommand(object):
+    """ Fetches a random tweet from a twitter account. """
+
+    def __init__(self, account, cache_size = 100, cache_timeout = 30*60):
+        self.twitter = twitter.Api()
+
+        self.cache = []
+        self.account = account
+        self.cache_size = cache_size
+        self.cache_timeout = cache_timeout
+        self.cache_time = datetime.datetime.now()
+
+    def __call__(self):
+        age = (datetime.datetime.now() - self.cache_time).seconds
+        if not self.cache or age > self.cache_timeout:
+            self._rebuild_cache()
+
+        if not self.cache:
+            return "Unavailable :("
+
+        return random.choice(self.cache)
+
+    def _rebuild_cache(self):
+        from itertools import dropwhile
+
+        try:
+            status = self.twitter.GetUserTimeline(self.account,
+                                                  count = self.cache_size)
+        except twitter.TwitterError:
+            return
+
+        tweets = [s.GetText() for s in status]
+
+        self.cache = []
+        for t in tweets:
+            # Strip @usernames from replies, hope they are in the beginning
+            words = t.split()
+            text = " ".join(dropwhile(lambda w: w[0] == "@", words))
+
+            self.cache.append(text.encode("utf-8"))
+
+        self.cache_time = datetime.datetime.now()
+
 class EC09Bot(ircbot.SingleServerIRCBot):
     NICK = "ec09bot"
     SERVERS = [("irc.freenode.net", 6667)]
@@ -44,7 +87,9 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         self.commands = {}
         self.add_command("leave", self.command_leave)
         self.add_command("bandeco", self.command_bandeco)
-        self.add_command("batima", self.command_batima, "bátima")
+        self.add_command("batima", TwitterCommand("falasdobatima"), "bátima")
+        self.add_command("chuck", TwitterCommand("dailychuckfact"),
+                         "chucknorris")
 
     def start(self):
         self._connect()
@@ -97,33 +142,6 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         bandeco_str = bandeco_str[0].upper() + bandeco_str[1:]
         return bandeco_str.encode("utf-8")
-
-    def command_batima(self):
-        age = (datetime.datetime.now() - self.batima_cache_time).seconds
-        if not self.batima_cache or age > self.batima_cache_age_max:
-            self._rebuild_batima_cache()
-
-        if not self.batima_cache:
-            return "FODEU! SERÁ QUE O TWITTER CAIU?"
-
-        return random.choice(self.batima_cache)
-
-    def _rebuild_batima_cache(self):
-        from itertools import dropwhile
-
-        status = self.twitter.GetUserTimeline("falasdobatima", count = 50)
-        tweets = [s.GetText() for s in status]
-
-        self.batima_cache = []
-
-        for t in tweets:
-            # Strip @usernames from replies, hope they are in the beginning
-            words = t.split()
-            batima_line = " ".join(dropwhile(lambda w: w[0] == "@", words))
-
-            self.batima_cache.append(batima_line.encode("utf-8"))
-
-        self.batima_cache_time = datetime.datetime.now()
 
     def command_leave(self):
         self.connection.quit(random.choice(self.BOT_UPRISE_MSGS))

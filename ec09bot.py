@@ -80,8 +80,8 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         st = st[len("bandeco("):-2]
 
-        d = json.loads(st)
-        d.update((k, v.lower()) for k, v in d.items())
+        d = json.loads(st, encoding = "latin-1")
+        d.update((k, v.strip().lower()) for k, v in d.items())
 
         bandeco_str = \
             "%(prato)s, com suco de %(suco)s, " \

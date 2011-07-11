@@ -40,10 +40,11 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         self.connection.add_global_handler("pubmsg", self._on_pubmsg)
 
-        self.twitter = twitter.Api()
-        self.batima_cache = []
-        self.batima_cache_age_max = 30*60 # seconds
-        self.batima_cache_time = datetime.datetime.now()
+        # Register commands
+        self.commands = {}
+        self.add_command("leave", self.command_leave)
+        self.add_command("bandeco", self.command_bandeco)
+        self.add_command("batima", self.command_batima, "bátima")
 
     def start(self):
         self._connect()
@@ -58,7 +59,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             return
 
         command = message[1:]
-        handler = getattr(self, "command_" + command, None)
+        handler = self.commands.get(command)
 
         if callable(handler):
             if random.randint(1, 100) == 42:
@@ -67,6 +68,13 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
             reply = "%s: %s" % (sendernick, handler())
             self.connection.privmsg(self.CHANNEL, reply)
+
+    def add_command(self, command_name, command_fn, *aliases):
+        # Make first letter case-insensitive
+        all_names = (command_name,) + aliases
+        all_names += tuple(name[0].swapcase() + name[1:] for name in all_names)
+
+        self.commands.update((name, command_fn) for name in all_names)
 
     def command_bandeco(self):
         bandeco_url = \

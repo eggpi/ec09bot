@@ -10,7 +10,8 @@ command\_modules in commands/\_\_init\_\_.py.
     The command name, callable and aliases should be declared in a list
 or tuple called command\_description in commands/<command\_name>.py
 
-    The callable receives as argument the EC09Bot instance.
+    The callable receives as argument the EC09Bot instance. If its return value
+is not None, it is sent back as a direct message to the calling user.
 
 - Removing a command
     Simply remove the command module's name from command\_modules in

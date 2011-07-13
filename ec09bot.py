@@ -22,10 +22,7 @@
 # THE SOFTWARE.
 
 import sys
-import json
 import random
-import urllib2
-import datetime
 
 try:
     import irclib
@@ -34,54 +31,7 @@ except ImportError:
     print >>sys.stderr, "This bot needs python-irclib."
     print >>sys.stderr, "http://python-irclib.sourceforge.net"
 
-try:
-    import twitter
-except ImportError:
-    print >>sys.stderr, "This bot needs python-twitter."
-    print >>sys.stderr, "http://code.google.com/p/python-twitter/"
-
-class TwitterCommand(object):
-    """ Fetches a random tweet from a twitter account. """
-
-    def __init__(self, account, cache_size = 100, cache_timeout = 30*60):
-        self.twitter = twitter.Api()
-
-        self.cache = []
-        self.account = account
-        self.cache_size = cache_size
-        self.cache_timeout = cache_timeout
-        self.cache_time = datetime.datetime.now()
-
-    def __call__(self):
-        age = (datetime.datetime.now() - self.cache_time).seconds
-        if not self.cache or age > self.cache_timeout:
-            self._rebuild_cache()
-
-        if not self.cache:
-            return "Unavailable :("
-
-        return random.choice(self.cache)
-
-    def _rebuild_cache(self):
-        from itertools import dropwhile
-
-        try:
-            status = self.twitter.GetUserTimeline(self.account,
-                                                  count = self.cache_size)
-        except twitter.TwitterError:
-            return
-
-        tweets = [s.GetText() for s in status]
-
-        self.cache = []
-        for t in tweets:
-            # Strip @usernames from replies, hope they are in the beginning
-            words = t.split()
-            text = " ".join(dropwhile(lambda w: w[0] == "@", words))
-
-            self.cache.append(text.encode("utf-8"))
-
-        self.cache_time = datetime.datetime.now()
+import commands
 
 class EC09Bot(ircbot.SingleServerIRCBot):
     NICK = "ec09bot"
@@ -107,11 +57,8 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         self.aliases = {}
 
         # Register commands
-        self.add_command("leave", self.command_leave)
-        self.add_command("bandeco", self.command_bandeco)
-        self.add_command("batima", TwitterCommand("falasdobatima"), "bátima")
-        self.add_command("chuck", TwitterCommand("dailychuckfact"),
-                         "chucknorris")
+        for command_name, command_fn, aliases in commands.commands:
+            self.add_command(command_name, command_fn, *aliases)
 
     def start(self):
         self._connect()
@@ -133,8 +80,11 @@ class EC09Bot(ircbot.SingleServerIRCBot):
                 uprise_msg = random.choice(self.BOT_UPRISE_MSGS)
                 self.connection.privmsg(self.CHANNEL, uprise_msg)
 
-            reply = "%s: %s" % (sendernick, handler())
-            self.connection.privmsg(self.CHANNEL, reply)
+            # XXX Also pass the event?
+            reply = handler(self)
+            if reply is not None:
+                reply = "%s: %s" % (sendernick, reply)
+                self.connection.privmsg(self.CHANNEL, reply)
 
     def add_command(self, command_name, command_fn, *aliases):
         self.commands[command_name] = command_fn
@@ -145,32 +95,6 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         aliases += (command_name[0].swapcase() + command_name[1:],)
 
         self.aliases.update((name, command_fn) for name in aliases)
-
-    def command_bandeco(self):
-        bandeco_url = \
-            "http://www.students.ic.unicamp.br/~ra091187/bandeco_svg/json.php"
-
-        try:
-            u = urllib2.urlopen(bandeco_url, timeout = 5)
-            st = u.read()
-        except urllib2.URLError:
-            return "Indisponível :("
-
-        st = st[len("bandeco("):-2]
-
-        d = json.loads(st, encoding = "latin-1")
-        d.update((k, v.strip().lower()) for k, v in d.items())
-
-        bandeco_str = \
-            "%(prato)s, com suco de %(suco)s, " \
-            "salada %(salada)s e sobremesa %(sobremesa)s." % d
-
-        bandeco_str = bandeco_str[0].upper() + bandeco_str[1:]
-        return bandeco_str.encode("utf-8")
-
-    def command_leave(self):
-        self.connection.quit(random.choice(self.BOT_UPRISE_MSGS))
-        sys.exit(0)
 
 if __name__ == "__main__":
     bot = EC09Bot()

@@ -103,8 +103,10 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         self.connection.add_global_handler("pubmsg", self._on_pubmsg)
 
-        # Register commands
         self.commands = {}
+        self.aliases = {}
+
+        # Register commands
         self.add_command("leave", self.command_leave)
         self.add_command("bandeco", self.command_bandeco)
         self.add_command("batima", TwitterCommand("falasdobatima"), "bátima")
@@ -124,7 +126,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             return
 
         command = message[1:]
-        handler = self.commands.get(command)
+        handler = self.commands.get(command, self.aliases.get(command))
 
         if callable(handler):
             if random.randint(1, 100) == 42:
@@ -135,11 +137,14 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             self.connection.privmsg(self.CHANNEL, reply)
 
     def add_command(self, command_name, command_fn, *aliases):
-        # Make first letter case-insensitive
-        all_names = (command_name,) + aliases
-        all_names += tuple(name[0].swapcase() + name[1:] for name in all_names)
+        self.commands[command_name] = command_fn
 
-        self.commands.update((name, command_fn) for name in all_names)
+        # Register aliases.
+        # Make first letter case-insensitive for the command name and aliases.
+        aliases += tuple(name[0].swapcase() + name[1:] for name in aliases)
+        aliases += (command_name[0].swapcase() + command_name[1:],)
+
+        self.aliases.update((name, command_fn) for name in aliases)
 
     def command_bandeco(self):
         bandeco_url = \

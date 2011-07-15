@@ -4,10 +4,11 @@ import importlib
 sys.path.append("commands")
 
 command_modules = [
-"batima",
-"bandeco",
-"chuck",
-"leave",
+    "batima",
+    "bandeco",
+    "chuck",
+    "leave",
+    "fortune",
 ]
 
 commands = []

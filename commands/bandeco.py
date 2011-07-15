@@ -46,4 +46,4 @@ def command_bandeco(bot):
     bandeco_str = bandeco_str[0].upper() + bandeco_str[1:]
     return bandeco_str.encode("utf-8")
 
-command_description = ["bandeco", command_bandeco, ("bandejão",)]
+command_description = [("bandeco", command_bandeco, ("bandejão",))]

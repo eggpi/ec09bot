@@ -22,7 +22,6 @@
 # THE SOFTWARE.
 
 import random
-
 from utils import tweetcache
 
 tweets = tweetcache.TweetCache("falasdobatima")
@@ -30,4 +29,4 @@ tweets = tweetcache.TweetCache("falasdobatima")
 def command_batima(batima):
 	return random.choice(tweets.get_tweets())
 
-command_description = ("batima", command_batima, ("bátima",))
+command_description = [("batima", command_batima, ("bátima",))]

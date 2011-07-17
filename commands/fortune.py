@@ -39,15 +39,21 @@ def get_fortune(fortunemod, bot):
 
 # (module_name, command_name, command_aliases)
 fortunes = [
+    ("bofh-excuses", "bofh", ("bastard", "operator")),
     ("calvin", "calvin", tuple()),
     ("computers", "comp", tuple()),
     ("futurama", "futurama", tuple()),
-    ("godfather", "godfather", tuple()),
+    ("the-godfather", "godfather", tuple()),
     ("homer", "homer", tuple()),
     ("kernelcookies", "kernel", tuple()),
     ("linux", "linux", tuple()),
     ("literature", "literature", tuple()),
+    ("matrix", "matrix", tuple()),
+    ("montypython", "montypython", tuple()),
+    ("southpark", "southpark", tuple()),
+    ("startrek", "startrek", tuple()),
     ("starwars", "starwars", ("sw", "usetheforce")),
+    ("wisdom", "wisdom", tuple()),
 ]
 
 command_description = [(cmdname, partial(get_fortune, modname), aliases)

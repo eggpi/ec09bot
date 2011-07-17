@@ -20,8 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import sys
 import subprocess
 from functools import partial
+
+def check_installed_fortunes(fortunes):
+    try:
+        proc = subprocess.Popen(("/usr/bin/fortune", "-f"),
+                                stderr = subprocess.PIPE)
+    except OSError:
+        return set()
+
+    installed_mods = set(line.split()[1] for line in proc.stderr)
+
+    for modname, cmdname, unused in fortunes:
+        if modname not in installed_mods:
+            print >>sys.stderr, "WARNING: Command %s will not work. " \
+                                "Missing fortune-mod %s." % (cmdname, modname)
 
 def get_fortune(fortunemod, bot):
     try:
@@ -56,5 +71,6 @@ fortunes = [
     ("wisdom", "wisdom", tuple()),
 ]
 
+check_installed_fortunes(fortunes)
 command_description = [(cmdname, partial(get_fortune, modname), aliases)
                        for modname, cmdname, aliases in fortunes]

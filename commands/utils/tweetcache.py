@@ -21,6 +21,7 @@
 # THE SOFTWARE.
 
 import datetime
+import sys
 
 try:
     import twitter

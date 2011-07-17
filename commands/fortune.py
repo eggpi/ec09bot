@@ -42,13 +42,14 @@ def get_fortune(fortunemod, bot):
 # (module_name, command_name, command_aliases)
 fortunes = [
     ("calvin", "calvin", tuple()),
+    ("computers", "comp", tuple()),
     ("futurama", "futurama", tuple()),
-    ("linux", "linux", tuple()),
+    ("godfather", "godfather", tuple()),
     ("homer", "homer", tuple()),
     ("kernelcookies", "kernel", tuple()),
-    ("starwars", "starwars", ("sw", "usetheforce")),
-    ("computers", "comp", tuple()),
+    ("linux", "linux", tuple()),
     ("literature", "literature", tuple()),
+    ("starwars", "starwars", ("sw", "usetheforce")),
 ]
 
 command_description = [(cmdname, partial(get_fortune, modname), aliases)

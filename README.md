@@ -18,7 +18,7 @@ should be an iterable of tuples (*command name*, *callable*, *aliases*), where
 a declaration like:
 
     ```python
-    command\_description = [("foo", foobar, ("bar, "baz"))]
+    command_description = [("foo", foobar, ("bar, "baz"))]
     ```
 
     suffices to declare a command "foo", with aliases "bar" and "baz". That is,
@@ -32,6 +32,7 @@ that returns a fortune cookie). These are all defined in commands/fortune.py,
 just add your command there and it will show up among the other commands.
 
 - Removing a command
+
     Simply remove the command module's name from command\_modules in
 commands/\_\_init\_\_.py.
 

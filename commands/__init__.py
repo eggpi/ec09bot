@@ -7,8 +7,9 @@ command_modules = [
     "batima",
     "bandeco",
     "chuck",
-    "leave",
     "fortune",
+    "leave",
+    "list",
 ]
 
 commands = []

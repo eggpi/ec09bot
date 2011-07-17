@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
 # Copyright (C) 2011 by Guilherme Pinto Gonçalves
@@ -22,6 +21,7 @@
 # THE SOFTWARE.
 
 import datetime
+import sys
 
 try:
     import twitter

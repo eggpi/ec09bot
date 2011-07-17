@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2011 by Guilherme Pinto Gonçalves
+# Copyright (C) 2011 by Guilherme Pinto Gonçalves, Ivan Sichmann Freitas
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import random
+def command_list(bot):
+    cmd_list = bot.commands.keys()
+    cmd_list.sort()
+    for cmd in cmd_list:
+        bot.connection.privmsg(bot.CHANNEL, cmd)
 
-from utils import tweetcache
-
-tweets = tweetcache.TweetCache("dailychuckfact")
-
-def command_batima(bot):
-	return random.choice(tweets.get_tweets())
-
-command_description = [("chuck", command_batima, ("chucknorris",))]
+command_description = [("list", command_list, ("list_commands", "ls"))]

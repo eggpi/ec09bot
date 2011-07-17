@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
 #-*- coding: utf-8 -*-
 
-# Copyright (C) 2011 by Guilherme Pinto Gonçalves
+# Copyright (C) 2011 by Guilherme Pinto Gonçalves, Ivan Sichmman Freitas
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
 import subprocess
 from functools import partial
 
@@ -41,14 +39,21 @@ def get_fortune(fortunemod, bot):
 
 # (module_name, command_name, command_aliases)
 fortunes = [
+    ("bofh-excuses", "bofh", ("bastard", "operator")),
     ("calvin", "calvin", tuple()),
+    ("computers", "comp", tuple()),
     ("futurama", "futurama", tuple()),
-    ("linux", "linux", tuple()),
+    ("the-godfather", "godfather", tuple()),
     ("homer", "homer", tuple()),
     ("kernelcookies", "kernel", tuple()),
-    ("starwars", "starwars", ("sw", "usetheforce")),
-    ("computers", "comp", tuple()),
+    ("linux", "linux", tuple()),
     ("literature", "literature", tuple()),
+    ("matrix", "matrix", tuple()),
+    ("montypython", "montypython", tuple()),
+    ("southpark", "southpark", tuple()),
+    ("startrek", "startrek", tuple()),
+    ("starwars", "starwars", ("sw", "usetheforce")),
+    ("wisdom", "wisdom", tuple()),
 ]
 
 command_description = [(cmdname, partial(get_fortune, modname), aliases)

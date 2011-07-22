@@ -18,7 +18,7 @@ should be an iterable of tuples (*command name*, *callable*, *aliases*), where
 a declaration like:
 
     ```python
-    command_description = [("foo", foobar, ("bar, "baz"))]
+    command_description = [("foo", foobar, ("bar", "baz"))]
     ```
 
     suffices to declare a command "foo", with aliases "bar" and "baz". That is,

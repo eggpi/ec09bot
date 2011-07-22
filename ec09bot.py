@@ -75,8 +75,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         argv = message[1:].split()
         command = argv[0]
 
-        handler = self.commands.get(command, self.aliases.get(command))
-
+        handler = self.find_command(command)
         if callable(handler):
             # Set up attributes for commands
             self.sendernick = sendernick
@@ -105,6 +104,9 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         aliases += (command_name[0].swapcase() + command_name[1:],)
 
         self.aliases.update((name, command_fn) for name in aliases)
+
+    def find_command(self, command):
+        return self.commands.get(command, self.aliases.get(command))
 
 if __name__ == "__main__":
     bot = EC09Bot()

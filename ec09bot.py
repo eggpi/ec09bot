@@ -72,16 +72,26 @@ class EC09Bot(ircbot.SingleServerIRCBot):
         if not message.startswith("!"):
             return
 
-        command = message[1:]
+        argv = message[1:].split()
+        command = argv[0]
+
         handler = self.commands.get(command, self.aliases.get(command))
 
         if callable(handler):
+            # Set up attributes for commands
+            self.sendernick = sendernick
+            self.raw_message = event.arguments()[0]
+
             if random.randint(1, 100) == 42:
                 uprise_msg = random.choice(self.BOT_UPRISE_MSGS)
                 self.connection.privmsg(self.CHANNEL, uprise_msg)
 
-            # XXX Also pass the event?
-            reply = handler(self)
+            try:
+                reply = handler(self, *argv[1:])
+            except TypeError:
+                # Assume this was raised by wrong number of args
+                return
+
             if reply is not None:
                 reply = "%s: %s" % (sendernick, reply)
                 self.connection.privmsg(self.CHANNEL, reply)

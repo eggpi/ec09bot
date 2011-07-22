@@ -24,8 +24,19 @@ a declaration like:
     suffices to declare a command "foo", with aliases "bar" and "baz". That is,
 the callable foobar gets called when a user issues either !foo, !bar or !baz.
 
-    The callable receives as argument the EC09Bot instance. If its return value
-is not None, it is sent back as a direct message to the calling user.
+    The callable receives as argument the EC09Bot instance. If any other words
+were passed in the command invocation, they are passed as additional arguments
+to the callable (EC09Bot will handle the exception when a wrong number of
+arguments are provided, so only make the callable accept \*args if you really
+need that).
+
+    If the callable's return value is not None, it is sent back as a
+hightlighted message to the calling user.
+
+    The nick of the user that invoked the command will be available as the
+'sendernick' attribute of the EC09Bot instance passed to the command. The raw
+message can be accessed in the 'raw\_message' attribute, in the off-chance that
+you might need that.
 
     A special case for this is adding a fortune command (that is, a command
 that returns a fortune cookie). These are all defined in commands/fortune.py,

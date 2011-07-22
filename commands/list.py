@@ -23,7 +23,8 @@
 def command_list(bot):
     cmd_list = bot.commands.keys()
     cmd_list.sort()
+    bot.connection.privmsg(bot.sendernick, "Available commands and aliases:")
     for cmd in cmd_list:
-        bot.connection.privmsg(bot.CHANNEL, cmd)
+        bot.connection.privmsg(bot.sendernick, cmd)
 
 command_description = [("list", command_list, ("list_commands", "ls"))]

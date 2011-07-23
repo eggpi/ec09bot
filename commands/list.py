@@ -20,26 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import itertools
+import time
 
 def command_list(bot):
-    # Chain all command names and aliases together
-    commands_and_aliases = itertools.chain(bot.commands, bot.aliases)
-
-    # Group them by the callable they map to
-    grouped = itertools.groupby(
-                      sorted(commands_and_aliases, key = bot.find_command),
-                      bot.find_command)
-
-    # And sort by command name
-    grouped_names = sorted(list(g) for k, g in grouped)
-
     bot.connection.privmsg(bot.sendernick, "Available commands (aliases):")
-    for names in grouped_names:
-    	line = names[0]
-    	if len(names) > 1:
-    		line += " (%s)" % " ".join(names[1:])
 
-    	bot.connection.privmsg(bot.sendernick, line)
+    # rev_commands = {callable : [command_name]}
+    rev_commands = dict((fn, [cmd]) for cmd, fn in bot.commands.iteritems())
+
+    # rev_commands = {callable : [command_name, aliases ...]}
+    for alias, fn in bot.aliases.iteritems():
+        rev_commands[fn].append(alias)
+
+    # Traverse commands in alphabetical order
+    for names in sorted(rev_commands.values()):
+        line = names[0]
+        if len(names) > 1:
+            line += " (%s)" % " ".join(names[1:])
+
+        print line
+        bot.connection.privmsg(bot.sendernick, line)
+        time.sleep(0.7)
 
 command_description = [("list", command_list, ("list_commands", "ls"))]

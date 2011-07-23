@@ -23,6 +23,7 @@
 
 import sys
 import random
+import inspect
 
 try:
     import irclib
@@ -88,8 +89,12 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             try:
                 reply = handler(self, *argv[1:])
             except TypeError:
-                # Assume this was raised by wrong number of args
-                return
+                if len(inspect.trace()) == 1:
+                    # Exception was caused by wrong number of args.
+                    reply = "Looks like you got the arguments wrong..."
+                else:
+                    # Command crashed!
+                    raise
 
             if reply is not None:
                 reply = "%s: %s" % (sendernick, reply)

@@ -24,19 +24,14 @@ import sys
 import subprocess
 from functools import partial
 
-def check_installed_fortunes(fortunes):
+def get_installed_fortunes():
     try:
         proc = subprocess.Popen(("/usr/bin/fortune", "-f"),
                                 stderr = subprocess.PIPE)
     except OSError:
         return set()
 
-    installed_mods = set(line.split()[1] for line in proc.stderr)
-
-    for modname, cmdname, unused in fortunes:
-        if modname not in installed_mods:
-            print >>sys.stderr, "WARNING: Command %s will not work. " \
-                                "Missing fortune-mod %s." % (cmdname, modname)
+    return set(line.split()[1] for line in proc.stderr)
 
 def get_fortune(fortunemod, bot):
     try:
@@ -71,6 +66,13 @@ fortunes = [
     ("wisdom", "wisdom", tuple()),
 ]
 
-check_installed_fortunes(fortunes)
-command_description = [(cmdname, partial(get_fortune, modname), aliases)
-                       for modname, cmdname, aliases in fortunes]
+command_description = []
+installed_mods = get_installed_fortunes()
+
+for modname, cmdname, aliases in fortunes:
+    if modname not in installed_mods:
+        print >>sys.stderr, "WARNING: Command %s will not work. " \
+                            "Missing fortune-mod %s." % (cmdname, modname)
+    else:
+        command_description.append(
+                [cmdname, partial(get_fortune, modname), aliases])

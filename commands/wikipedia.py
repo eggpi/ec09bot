@@ -59,6 +59,20 @@ def normalize_unicode_chars(text):
 
     return re.sub(r'(\\\d{1,3})+', convert_decimal_codes_to_utf8, text)
 
+def fix_breaks(text, at = 255, size = 3):
+    # The text in the DNS query is broken in double-quoted
+    # strings separated by a space every 'at' characters.
+    # Fix this here by joining the strings.
+
+    ret = ""
+    i = 0
+    for j in xrange(at, len(text), at):
+        ret += text[i:j]
+        i = j + size
+
+    ret += text[i:]
+    return ret
+
 def command_wikipedia(bot, arg1, *args):
     args = (arg1,) + args # Cheap trick to require at least one arg
     addr = "_".join(args) + ".wp.dg.cx"
@@ -70,7 +84,10 @@ def command_wikipedia(bot, arg1, *args):
     except dns.resolver.Timeout:
         return "Unavailable :("
 
-    text = str(ans.rrset[0])
-    return normalize_unicode_chars(text)
+    text = str(ans.rrset[0]).strip('"')
+    text = normalize_unicode_chars(text)
+    text = fix_breaks(text)
+
+    return text
 
 command_description = [("wikipedia", command_wikipedia, ("wiki",))]

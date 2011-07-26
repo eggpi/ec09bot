@@ -73,6 +73,9 @@ def fix_breaks(text, at = 255, size = 3):
     ret += text[i:]
     return ret
 
+def unescape_quotes(text):
+    return re.sub(r'\\"', '"', text)
+
 def command_wikipedia(bot, arg1, *args):
     args = (arg1,) + args # Cheap trick to require at least one arg
     addr = "_".join(args) + ".wp.dg.cx"
@@ -87,6 +90,7 @@ def command_wikipedia(bot, arg1, *args):
     text = str(ans.rrset[0]).strip('"')
     text = normalize_unicode_chars(text)
     text = fix_breaks(text)
+    text = unescape_quotes(text)
 
     return text
 

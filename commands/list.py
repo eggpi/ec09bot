@@ -38,7 +38,6 @@ def command_list(bot):
         if len(names) > 1:
             line += " (%s)" % " ".join(names[1:])
 
-        print line
         bot.connection.privmsg(bot.sendernick, line)
         time.sleep(0.7)
 

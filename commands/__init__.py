@@ -7,6 +7,7 @@ command_modules = [
     "fortune",
     "leave",
     "list",
+    "wikipedia",
 ]
 
 commands = []

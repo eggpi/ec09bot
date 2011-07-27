@@ -89,8 +89,8 @@ def command_wikipedia(bot, arg1, *args):
 
     text = str(ans.rrset[0]).strip('"')
     text = normalize_unicode_chars(text)
-    text = fix_breaks(text)
     text = unescape_quotes(text)
+    text = fix_breaks(text)
 
     return text
 

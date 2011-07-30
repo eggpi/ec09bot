@@ -72,7 +72,7 @@ installed_mods = get_installed_fortunes()
 
 for modname, cmdname, aliases in fortunes:
     if modname not in installed_mods:
-        print >>sys.stderr, "WARNING: Command %s will not work. " \
+        print >> sys.stderr, "WARNING: Command %s will not work. " \
                             "Missing fortune-mod %s." % (cmdname, modname)
     else:
         command_description.append(

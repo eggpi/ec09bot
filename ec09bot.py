@@ -29,8 +29,8 @@ try:
     import irclib
     import ircbot
 except ImportError:
-    print >>sys.stderr, "This bot needs python-irclib."
-    print >>sys.stderr, "http://python-irclib.sourceforge.net"
+    print >> sys.stderr, "This bot needs python-irclib."
+    print >> sys.stderr, "http://python-irclib.sourceforge.net"
 
 import commands
 
@@ -54,12 +54,14 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
         self.connection.add_global_handler("pubmsg", self._on_pubmsg)
 
+        self.sendernick = None
+        self.raw_message = None
         self.commands = {}
         self.aliases = {}
 
         # Register commands
         for command_name, command_fn, aliases in commands.commands:
-            self.add_command(command_name, command_fn, *aliases)
+            self.add_command(command_name, command_fn, aliases)
 
     def start(self):
         self._connect()
@@ -100,7 +102,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
                 reply = "%s: %s" % (sendernick, reply)
                 self.connection.privmsg(self.CHANNEL, reply)
 
-    def add_command(self, command_name, command_fn, *aliases):
+    def add_command(self, command_name, command_fn, aliases):
         self.commands[command_name] = command_fn
 
         # Register aliases.

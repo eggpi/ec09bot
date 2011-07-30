@@ -25,7 +25,7 @@ from utils import tweetcache
 
 tweets = tweetcache.TweetCache("falasdobatima")
 
-def command_batima(batima):
+def command_batima(bot):
     return random.choice(tweets.get_tweets())
 
 command_description = [("batima", command_batima, ("bátima",))]

@@ -26,8 +26,11 @@ import sys
 try:
     import twitter
 except ImportError:
-    print >>sys.stderr, "This bot needs python-twitter."
-    print >>sys.stderr, "http://code.google.com/p/python-twitter/"
+    print >> sys.stderr, "----------------------------------------"
+    print >> sys.stderr, "Could not import python-twitter. ",
+    print >> sys.stderr, "Some commands will be disabled."
+    print >> sys.stderr, "http://code.google.com/p/python-twitter/"
+    print >> sys.stderr, "----------------------------------------"
     raise
 
 class TweetCache(object):

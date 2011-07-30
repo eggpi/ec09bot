@@ -25,13 +25,14 @@
 import re
 import sys
 import struct
-import dns.resolver
 
 try:
-    import dns
+    import dns.resolver
 except ImportError:
-    print >>sys.stderr, "This bot requires dnspython."
-    print >>sys.stderr, "http://www.dnspython.org/"
+    print >> sys.stderr, "----------------------------------------"
+    print >> sys.stderr, "!wikipedia requires dnspython."
+    print >> sys.stderr, "http://www.dnspython.org/"
+    print >> sys.stderr, "----------------------------------------"
     raise
 
 def normalize_unicode_chars(text):

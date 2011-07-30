@@ -51,6 +51,7 @@ def get_fortune(fortunemod, bot):
 fortunes = [
     ("bofh-excuses", "bofh", ("bastard", "operator")),
     ("calvin", "calvin", tuple()),
+    ("chucknorris", "chuck", ("chucknorris", "chuckfact")),
     ("computers", "comp", tuple()),
     ("futurama", "futurama", tuple()),
     ("the-godfather", "godfather", tuple()),

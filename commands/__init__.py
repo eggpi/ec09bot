@@ -3,7 +3,6 @@ import importlib
 command_modules = [
     "batima",
     "bandeco",
-    "chuck",
     "fortune",
     "leave",
     "list",

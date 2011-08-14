@@ -8,6 +8,7 @@ command_modules = [
     "leave",
     "list",
     "wikipedia",
+    "word",
 ]
 
 commands = []

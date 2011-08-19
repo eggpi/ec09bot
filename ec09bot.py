@@ -76,6 +76,10 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             return
 
         argv = message[1:].split()
+
+        if not argv:
+            return
+
         command = argv[0]
 
         handler = self.find_command(command)

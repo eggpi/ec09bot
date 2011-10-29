@@ -6,6 +6,7 @@ command_modules = [
     "bandeco",
     "fortune",
     "leave",
+    "lico",
     "list",
     "wikipedia",
     "word",

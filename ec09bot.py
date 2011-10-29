@@ -87,6 +87,7 @@ class EC09Bot(ircbot.SingleServerIRCBot):
             # Set up attributes for commands
             self.sendernick = sendernick
             self.raw_message = event.arguments()[0]
+            self.target = event.target()
 
             if random.randint(1, 100) == 42:
                 uprise_msg = random.choice(self.BOT_UPRISE_MSGS)

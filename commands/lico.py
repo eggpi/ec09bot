@@ -23,7 +23,7 @@
 import threading
 import collections
 
-DEFAULT_TIMEOUT = 5 # seconds
+DEFAULT_TIMEOUT = 7 # seconds
 DEFAULT_KEYWORD = "eunuco"
 
 def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
@@ -50,6 +50,7 @@ def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
     def kick_targets():
         bot.connection.remove_global_handler("pubmsg", wait_for_keyword)
 
+        bot.connection.privmsg(bot.CHANNEL, "Time's up!")
         for u in users:
             if u not in ("ChanServ", bot.NICK) and not targets[u]:
                 bot.connection.kick(channel.name, u)

@@ -30,6 +30,8 @@ DEFAULT_TIMEOUT = 7 # seconds
 DEFAULT_KEYWORD = "eunuco"
 
 def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
+    global RUNNING
+
     if RUNNING and not REENTRANT:
         return "Sorry, !lico already running"
 
@@ -54,6 +56,8 @@ def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
             targets[sendernick] = True
 
     def kick_targets():
+        global RUNNING
+
         bot.connection.remove_global_handler("pubmsg", wait_for_keyword)
         RUNNING = False
 

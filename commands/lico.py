@@ -23,10 +23,16 @@
 import threading
 import collections
 
+REENTRANT = False # try setting to True and running !lico <timeout> !lico
+RUNNING = False
+
 DEFAULT_TIMEOUT = 7 # seconds
 DEFAULT_KEYWORD = "eunuco"
 
 def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
+    if RUNNING and not REENTRANT:
+        return "Sorry, !lico already running"
+
     try:
         timeout = int(timeout)
     except ValueError:
@@ -49,6 +55,7 @@ def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
 
     def kick_targets():
         bot.connection.remove_global_handler("pubmsg", wait_for_keyword)
+        RUNNING = False
 
         bot.connection.privmsg(bot.CHANNEL, "Time's up!")
         for u in users:
@@ -56,6 +63,8 @@ def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
                 bot.connection.kick(channel.name, u)
 
     bot.connection.add_global_handler("pubmsg", wait_for_keyword)
+
+    RUNNING = True
 
     # Could also use irclib's execute_at
     timer = threading.Timer(timeout, kick_targets)

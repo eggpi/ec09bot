@@ -29,16 +29,24 @@ RUNNING = False
 DEFAULT_TIMEOUT = 7 # seconds
 DEFAULT_KEYWORD = "eunuco"
 
-def command_lico(bot, timeout = DEFAULT_TIMEOUT, keyword = DEFAULT_KEYWORD):
+def command_lico(bot, firstarg = DEFAULT_TIMEOUT, *keyword):
     global RUNNING
 
     if RUNNING and not REENTRANT:
         return "Sorry, !lico already running"
 
     try:
-        timeout = int(timeout)
+        # See if we can get the timeout from the first argument
+        timeout = int(firstarg)
     except ValueError:
-        return "Invalid timeout"
+        # Nope, treat it as part of the keyword and use the default timeout.
+        keyword = (firstarg,) + keyword
+        timeout = DEFAULT_TIMEOUT
+
+    if keyword:
+        keyword = " ".join(keyword)
+    else:
+        keyword = DEFAULT_KEYWORD
 
     channel = bot.channels[bot.target]
     channel.name = bot.target

@@ -26,7 +26,9 @@ import collections
 REENTRANT = False # try setting to True and running !lico <timeout> !lico
 RUNNING = False
 
-DEFAULT_TIMEOUT = 7 # seconds
+MINIMUM_TIMEOUT = 7
+DEFAULT_TIMEOUT = 15 # seconds
+
 DEFAULT_KEYWORD = "eunuco"
 
 def command_lico(bot, firstarg = DEFAULT_TIMEOUT, *keyword):
@@ -53,6 +55,10 @@ def command_lico(bot, firstarg = DEFAULT_TIMEOUT, *keyword):
 
     if not channel.is_oper(bot.NICK):
         return "Oops, I need to be op for that :("
+
+    if timeout < MINIMUM_TIMEOUT:
+        bot.connection.kick(channel.name, bot.sendernick, "Funny, aren't you?")
+        return
 
     targets = collections.defaultdict(lambda: False)
     users = channel.users()

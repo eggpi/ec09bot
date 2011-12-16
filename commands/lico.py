@@ -63,7 +63,7 @@ def command_lico(bot, firstarg = DEFAULT_TIMEOUT, *keyword):
                                 "Funny, aren't you?")
             return
         else:
-            return "Sorry, minimum timeout is " + MINIMUM_TIMEOUT
+            return "Sorry, minimum timeout is " + str(MINIMUM_TIMEOUT)
 
     targets = collections.defaultdict(lambda: False)
     users = channel.users()

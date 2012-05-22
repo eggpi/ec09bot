@@ -1,4 +1,4 @@
-A very simple IRC bot used by #ec09 @ FreeNode.
+A very simple, extensible IRC bot.
 
 Simple usage
 ------------

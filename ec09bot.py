@@ -6,8 +6,8 @@ import random
 import inspect
 
 try:
-    import irclib
-    import ircbot
+    import python_irclib.irclib as irclib
+    import python_irclib.ircbot as ircbot
 except ImportError:
     print >> sys.stderr, "This bot needs python-irclib."
     print >> sys.stderr, "http://python-irclib.sourceforge.net"

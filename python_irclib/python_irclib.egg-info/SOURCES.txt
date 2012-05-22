@@ -1,0 +1,7 @@
+README
+ircbot.py
+irclib.py
+python_irclib.egg-info/PKG-INFO
+python_irclib.egg-info/SOURCES.txt
+python_irclib.egg-info/dependency_links.txt
+python_irclib.egg-info/top_level.txt

@@ -1,3 +1,2 @@
 dnspython==1.9.4
-python-irclib==0.4.6
 python-twitter==0.8.2

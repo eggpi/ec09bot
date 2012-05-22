@@ -45,8 +45,11 @@ class EC09Bot(ircbot.SingleServerIRCBot):
 
     def start(self):
         self._connect()
-        self.connection.join(self.CHANNEL)
         irclib.SimpleIRCClient.start(self)
+        # self.connection.join(self.CHANNEL)
+
+    def on_welcome(self, c, e):
+        c.join(self.CHANNEL)
 
     def _on_pubmsg(self, connection, event):
         sendernick, _ = event.source().split('!', 1)
